@@ -1,94 +1,86 @@
-import React, { useState} from 'react';
+import React, { useState } from "react";
+import InputDate from "./InputDate";
+import moment from "moment";
+import inputLabelAndId from "../Constants/Constants"; // an array of object [{label:string,id:string}]
 
-import moment from 'moment';
-
-import 'moment/locale/en-gb'; // Import the locale you prefer
-
-
-
+import "moment/locale/en-gb"; // Import the locale you prefer
 
 export default function DatePicker() {
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
-  const [fromDate, setFromDate] = useState('');
-  const [toDate, setToDate] = useState('');
-    const duration = [
-        { label: 'Year', id: 'year' },
-        { label: 'Months', id: 'month' },
-        { label: 'Days', id: 'day' },
-        { label: 'Hours', id: 'hour' },
-        { label: 'Minutes', id: 'minute' },
-    ]
-
-
-
-
+  // it will update the toDate whenever year,month,day, hours and minute input value changes
   const handleDurationChange = (e) => {
+    const duration = parseInt(e.target.value);
+    const calculatedToDate = moment(fromDate).add(duration, e.target.id); //to add value in fromDate
 
-      const duration = parseInt(e.target.value);
-      
-
-    const calculatedToDate = moment(fromDate).add(duration, e.target.id);
-
-    setToDate(calculatedToDate.format('YYYY-MM-DDTHH:mm'));
-
+    setToDate(calculatedToDate.format("YYYY-MM-DDTHH:mm"));
   };
 
-   
-
-
-
   return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: "#2575BE",
+        width: "50%",
+        margin: "auto",
+        borderRadius: "20px",
+      }}
+    >
+      <h1 style={{ fontFamily: "nunito", fontWeight: "400", color: "#FFFFFF" }}>
+        Date Picker
+      </h1>
+      <InputDate
+        date={fromDate}
+        disabled={false}
+        setFromDate={setFromDate}
+        label="From Date"
+      />
 
-    <div>
+      <h3
+        id="duration"
+        style={{ fontFamily: "nunito", fontWeight: "200", color: "#FFF" }}
+      >
+        Duration:
+      </h3>
 
-      <h1>Date Picker</h1>
-
-      <div>
-
-        <label htmlFor="from-date-picker">From Date:</label>
-
-        <input
-
-          id="from-date-picker"
-
-          type="datetime-local"
-
-          value={fromDate}
-
-          onChange={(e)=>{ setFromDate(e.target.value);}}
-
-        />
-
-      </div>
-
-      <div>
-
-              <h3 id="duration">Duration:</h3>
-              
-              {duration.map((item,index) => {
-                  return <div key={String(index)}>
-                      <label htmlFor={item.id}>{ item.label}</label>
-              <input id={item.id} type='text'  onChange={handleDurationChange} />
-                  </div>
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          margin: "auto",
+          marginBottom: "20px",
+        }}
+      >
+        {/** for input of year , months, day, hours and minutes */}
+        {inputLabelAndId.map((item, index) => {
+          return (
+            <div
+              key={String(index)}
+              style={{ display: "flex", flexDirection: "column" }}
+            >
+              <label
+                htmlFor={item.id}
+                style={{
+                  fontFamily: "nunito",
+                  fontWeight: "200",
+                  color: "#FFF",
+                }}
+              >
+                {item.label}
+              </label>
+              <input
+                id={item.id}
+                type="text"
+                onChange={handleDurationChange}
+                style={{ width: "100px" }}
+              />
+            </div>
+          );
         })}
-             
       </div>
-
-      <div style={{marginTop:'20px'}}>
-
-        <label htmlFor="to-date-picker">To Date:</label>
-
-        <input id="to-date-picker" type="datetime-local" value={toDate} disabled />
-
-      </div>
-
+      <InputDate disabled={true} date={toDate} label="To Date" />
     </div>
-
   );
-
 }
-
-
-
-
- 
